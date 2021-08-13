@@ -6,8 +6,6 @@ import { getTokenFromUri } from './spotify/spotify';
 import SpotifywebApi from "spotify-web-api-js";
 import { useStateProvider } from './context/state-context';
 
-// Get client ID and SECRET from developer.spotify.com
-
 const spotify = new SpotifywebApi();
 
 function App() {
@@ -52,7 +50,7 @@ function App() {
     }
     console.log("I have  a token", token)
 
-  }, []);
+  }, [token, dispatch]);
   console.log('👾', user);
   console.log(token)
 
