@@ -1,22 +1,27 @@
 import React, { useEffect } from 'react';
-import './App.css';
-import Login from './Login';
-import { getTokenfromUrl } from './spotify';
-import SpotifyWebApi from 'spotify-web-api-js';
-import Player from './Player';
-import { useDataLayerValue } from './DataLayer';
+import classes from './App.module.css'
+import Login from './components/Login';
+import Player from './components/Player';
+import { getTokenFromUri } from './spotify/spotify';
+import SpotifywebApi from "spotify-web-api-js";
+import { useStateProvider } from './context/state-context';
 
-const spotify = new SpotifyWebApi();
+// Get client ID and SECRET from developer.spotify.com
+
+const spotify = new SpotifywebApi();
 
 function App() {
-  const [{ user, token }, dispatch] = useDataLayerValue();
+  // const [token, setToken] = useState(null);
+  const [{ user, token }, dispatch] = useStateProvider();
 
   useEffect(() => {
-    const hash = getTokenfromUrl();
-    window.location.hash = '';
-    const _token = hash.access_token;
+    const hash = getTokenFromUri();
+    window.location.hash = "";
+    const _token = hash.access_token
 
     if (_token) {
+      // setToken(_token)
+
       dispatch({
         type: 'SET_TOKEN',
         token: _token
@@ -24,38 +29,43 @@ function App() {
 
       spotify.setAccessToken(_token);
 
-      spotify.getMe().then(user => {
+      spotify.getMe().then((user => {
         dispatch({
           type: 'SET_USER',
-          user,
-        })
-        console.log(user,)
-      });
+          user: user
+        });
+      }));
 
-      spotify.getUserPlaylists().then((playlists) => {
+      spotify.getUserPlaylists().then(playlists => {
         dispatch({
-          type: "SET_PLAYLISTS",
-          playlists: playlists,
+          type: "SET_PLAYLIST",
+          playlists
         })
-      });
+      })
 
-      spotify.getPlaylist('id').then(response => {
+      spotify.getPlaylist('4EE1SLGsJokeyBjcgNl87y').then(response => {
         dispatch({
-          type: 'SET_DISCOVER_WEEKLY',
+          type: "SET_DISCOVER_WEEKLY",
           discover_weekly: response,
         })
       })
     }
-    console.log(user)
-  }, [dispatch, user]);
+    console.log("I have  a token", token)
+
+  }, []);
+  console.log('👾', user);
+  console.log(token)
 
   return (
-    <div className="app">
+    <div className={classes.app}>
       {
-        token ? <Player spotify={spotify} /> : <Login />
-      }
+        !token ? (
+          <Login />
+        ) : (
+          <Player spotify={spotify} />
+        )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

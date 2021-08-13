@@ -5,20 +5,22 @@
     color: white;
     height: 100vh;
     min-width: 230px;
-    padding: 0 10px;
 }
 
-
+.sidebar > hr {
+    border: 1px solid #282828;
+    width: 90%;
+    margin: 10px auto;
+}
 
 .sidebar__logo {
-    object-fit: contain;
     height: 70px;
     padding: 10px;
-    margin-right: auto;
+    margin-right: auto; /*to correct it from the left*/
 }
 
 .sidebar__title {
+    margin-left: 10px;
     padding: 5px;
     font-size: 12px;
-    margin-left: 10px;
 }
